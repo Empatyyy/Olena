@@ -40,8 +40,8 @@ export default function About() {
                 {tag}
               </span>
             ))}
-          </motion.div>
-        </div>
+          </div>
+        </motion.div>
       </div>
     </section>
   );
