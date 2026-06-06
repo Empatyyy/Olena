@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { GraduationCap, Award, BookOpen, ShieldPlus, HeartHandshake, X } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function Education() {
   const [selectedImage, setSelectedImage] = useState<number | null>(null);
@@ -37,16 +38,26 @@ export default function Education() {
   return (
     <section id="education" className="py-20 bg-white">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-16"
+        >
           <h2 className="text-3xl md:text-4xl font-serif font-bold mb-4">Освіта та кваліфікація</h2>
           <div className="w-16 h-1 bg-brand-accent1/50 mx-auto rounded-full"></div>
-        </div>
+        </motion.div>
 
         <div className="space-y-6">
           {educationItems.map((item, index) => (
-            <div
+            <motion.div
               key={index}
-              className="bg-brand-bg/50 border border-brand-accent1/10 rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row items-start gap-6 hover:shadow-md transition-shadow"
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              className="bg-brand-bg/50 border border-brand-accent1/10 rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row items-start gap-6 hover:shadow-premium transition-shadow duration-300"
             >
               <div className="w-14 h-14 shrink-0 bg-brand-accent1/10 text-brand-accent1 rounded-2xl flex items-center justify-center shadow-sm">
                 {item.icon}
@@ -55,18 +66,29 @@ export default function Education() {
                 <h3 className="text-xl font-bold mb-2 text-brand-text">{item.title}</h3>
                 <p className="text-brand-text/80 leading-relaxed">{item.description}</p>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
 
-        <div className="mt-16">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.6 }}
+          className="mt-16"
+        >
           <h3 className="text-2xl font-serif font-bold mb-8 text-center text-brand-text">Мої сертифікати</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
-            {[1, 2, 3, 4, 5].map((num) => (
-              <div 
+            {[1, 2, 3, 4, 5].map((num, index) => (
+              <motion.div 
                 key={num} 
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: index * 0.1 }}
+                whileHover={{ y: -5, scale: 1.05 }}
                 onClick={() => setSelectedImage(num)}
-                className="relative h-64 bg-white rounded-2xl overflow-hidden shadow-sm border border-brand-accent1/10 hover:shadow-md transition-shadow cursor-pointer"
+                className="relative h-64 bg-white rounded-2xl overflow-hidden shadow-sm border border-brand-accent1/10 hover:shadow-premium transition-all duration-300 cursor-pointer"
               >
                 <Image
                   src={`/images/cert${num}.jpg`}
@@ -74,42 +96,52 @@ export default function Education() {
                   fill
                   className="object-contain p-2"
                 />
-              </div>
+              </motion.div>
             ))}
           </div>
-        </div>
+        </motion.div>
       </div>
 
       {/* Lightbox Modal */}
-      {selectedImage !== null && (
-        <div 
-          className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 sm:p-8"
-          onClick={() => setSelectedImage(null)}
-        >
-          <button 
-            className="absolute top-6 right-6 text-white/70 hover:text-white transition-colors p-2"
-            onClick={(e) => {
-              e.stopPropagation();
-              setSelectedImage(null);
-            }}
-            aria-label="Закрити"
+      <AnimatePresence>
+        {selectedImage !== null && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 sm:p-8"
+            onClick={() => setSelectedImage(null)}
           >
-            <X size={36} />
-          </button>
-          <div 
-            className="relative w-full max-w-5xl h-full max-h-[90vh]"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <Image
-              src={`/images/cert${selectedImage}.jpg`}
-              alt={`Сертифікат ${selectedImage}`}
-              fill
-              className="object-contain"
-              priority
-            />
-          </div>
-        </div>
-      )}
+            <button 
+              className="absolute top-6 right-6 text-white/70 hover:text-white transition-colors p-2"
+              onClick={(e) => {
+                e.stopPropagation();
+                setSelectedImage(null);
+              }}
+              aria-label="Закрити"
+            >
+              <X size={36} />
+            </button>
+            <motion.div 
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={{ type: "spring", stiffness: 300, damping: 25 }}
+              className="relative w-full max-w-5xl h-full max-h-[90vh]"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Image
+                src={`/images/cert${selectedImage}.jpg`}
+                alt={`Сертифікат ${selectedImage}`}
+                fill
+                className="object-contain"
+                priority
+              />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }
